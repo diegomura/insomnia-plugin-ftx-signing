@@ -11,6 +11,7 @@ function computeHttpSignature(msg, key) {
 module.exports.requestHooks = [
   (context) => {
     const req = context.request
+
     // Validate URL
     if (
       !req.hasOwnProperty('getUrl') ||
@@ -22,18 +23,23 @@ module.exports.requestHooks = [
       return
     }
 
-    // Check for a valid api key
+    // Check for a valid api secret
     const key = req.getEnvironmentVariable('API_SECRET')
     if (key == null) {
       console.log('Could not find environment variable "API_SECRET". Cannot sign message')
       throw new Error("Message should be signed, but cannot find 'API_SECRET' environment variable.")
     }
 
+    // Check for timestamp header
+    if (!req.hasHeader('FTX-TS')) {
+      console.log('Could not find header "FTX-TS". Cannot sign message')
+      throw new Error("Message should be signed, but cannot find 'FTX-TS' header.")
+    }
+
     const method = req.getMethod();
     const timestamp = req.getHeader('FTX-TS')
     const path = (new URL(req.getUrl())).pathname
     const body = req.getBody().text || ''
-
 
     const message = `${timestamp}${method}${path}${body}`
     const signature = computeHttpSignature(message, key)

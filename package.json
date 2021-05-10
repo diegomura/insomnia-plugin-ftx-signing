@@ -1,7 +1,6 @@
 {
   "name": "insomnia-plugin-ftx-signing",
-  "version": "0.0.1",
-  "private": true,
+  "version": "1.0.0",
   "license": "MIT",
   "author": "Diego Muracciole <diegomuracciole@gmail.com>",
   "repository": "https://github.com/diegomura/insomnia-plugin-ftx-signing",
